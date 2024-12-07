@@ -1,4 +1,5 @@
 use winit::application::ApplicationHandler;
+use winit::dpi::LogicalSize;
 use winit::event::WindowEvent;
 use winit::event_loop::{ActiveEventLoop, ControlFlow, EventLoop};
 use winit::window::{Window, WindowAttributes, WindowId};
@@ -10,7 +11,10 @@ struct App {
 
 impl ApplicationHandler for App {
     fn resumed(&mut self, event_loop: &ActiveEventLoop) {
-        let window_attributes = WindowAttributes::default().with_title("Pong");
+        let window_attributes = WindowAttributes::default()
+            .with_title("Pong")
+            .with_inner_size(LogicalSize::new(800, 600))
+            .with_resizable(false);
         self.window = Some(event_loop.create_window(window_attributes).unwrap());
     }
 
