@@ -1,4 +1,4 @@
-use crate::context::Context;
+use crate::context::{self, Context};
 use crate::input::handle_key_event;
 use std::sync::Arc;
 use winit::application::ApplicationHandler;
@@ -24,15 +24,8 @@ impl<'window> ApplicationHandler for App<'window> {
                 .create_window(window_attributes)
                 .expect("Failed to create window"),
         );
-
         self.window = Some(window.clone());
 
-        //self.context = match &self.window {
-        //    Some(window) => Some(pollster::block_on(Context::new(window.clone()))),
-        //    None => {
-        //        return;
-        //    }
-        //};
         let context = pollster::block_on(Context::new(window.clone()));
         self.context = Some(context);
     }
@@ -45,11 +38,22 @@ impl<'window> ApplicationHandler for App<'window> {
     ) {
         match event {
             WindowEvent::CloseRequested => event_loop.exit(),
+
             WindowEvent::KeyboardInput {
                 event,
                 is_synthetic: false,
                 ..
             } => handle_key_event(event),
+
+            WindowEvent::RedrawRequested => {
+                if let Some(context) = self.context.as_mut() {
+                    match context.render() {
+                        Ok(_) => {}
+                        Err(e) => eprintln!("{:?}", e),
+                    }
+                }
+            }
+
             _ => (),
         }
     }
