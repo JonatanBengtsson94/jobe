@@ -7,7 +7,7 @@ struct VertexPayload {
 fn vs_main(@builtin(vertex_index) i: u32) -> VertexPayload {
     var positions = array<vec2<f32>, 3>(
         vec2<f32>(-0.75, -0.75),
-        vec2<f32>(0.75, 0.75),
+        vec2<f32>(0.75, -0.75),
         vec2<f32>(0.0, 0.75)
     );
 
