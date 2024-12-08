@@ -1,3 +1,4 @@
+use std::sync::Arc;
 use winit::window::Window;
 
 pub struct Context<'window> {
@@ -9,14 +10,14 @@ pub struct Context<'window> {
 }
 
 impl<'window> Context<'window> {
-    async fn new(window: &'window Window) -> Self {
+    pub async fn new(window: Arc<Window>) -> Self {
         let instance_descriptor = wgpu::InstanceDescriptor {
             backends: wgpu::Backends::all(),
             ..Default::default()
         };
         let instance = wgpu::Instance::new(instance_descriptor);
         let surface = instance
-            .create_surface(window)
+            .create_surface(Arc::clone(&window))
             .expect("Failed to create surface");
         let adapter_descriptor = wgpu::RequestAdapterOptionsBase {
             power_preference: wgpu::PowerPreference::HighPerformance,
