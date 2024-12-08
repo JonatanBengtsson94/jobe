@@ -66,7 +66,7 @@ impl PipelineBuilder {
                 module: &shader_module,
                 entry_point: Some(&self.vertex_entry),
                 compilation_options: Default::default(),
-                buffers: &[],
+                buffers: &self.vertex_buffer_layouts,
             },
             primitive: wgpu::PrimitiveState {
                 topology: wgpu::PrimitiveTopology::TriangleList,
