@@ -1,3 +1,4 @@
+use crate::renderer_backend::mesh_builder;
 use crate::renderer_backend::pipeline_builder::PipelineBuilder;
 use std::sync::Arc;
 use wgpu::util::RenderEncoder;
@@ -10,6 +11,7 @@ pub struct Context<'window> {
     queue: wgpu::Queue,
     surface_config: wgpu::SurfaceConfiguration,
     render_pipeline: wgpu::RenderPipeline,
+    triangle_mesh: wgpu::Buffer,
 }
 
 impl<'window> Context<'window> {
@@ -49,8 +51,11 @@ impl<'window> Context<'window> {
             .expect("Surface not supported by adapter");
         surface.configure(&device, &surface_config);
 
-        let pipeline_builder =
+        let triangle_mesh = mesh_builder::make_triangle(&device);
+
+        let mut pipeline_builder =
             PipelineBuilder::new("shader.wgsl", "vs_main", "fs_main", surface_config.format);
+        pipeline_builder.add_buffer_layout(mesh_builder::Vertex::get_layout());
         let render_pipeline = pipeline_builder.build_pipeline(&device);
 
         Self {
@@ -60,6 +65,7 @@ impl<'window> Context<'window> {
             queue,
             surface_config,
             render_pipeline,
+            triangle_mesh,
         }
     }
 
@@ -100,6 +106,7 @@ impl<'window> Context<'window> {
         {
             let mut renderpass = command_encoder.begin_render_pass(&render_pass_descriptor);
             renderpass.set_pipeline(&self.render_pipeline);
+            renderpass.set_vertex_buffer(0, self.triangle_mesh.slice(..));
             renderpass.draw(0..3, 0..1);
         }
         self.queue.submit(Some(command_encoder.finish()));
