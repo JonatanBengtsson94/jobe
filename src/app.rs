@@ -1,4 +1,4 @@
-use crate::context::{self, Context};
+use crate::context::Context;
 use crate::input::handle_key_event;
 use std::sync::Arc;
 use winit::application::ApplicationHandler;

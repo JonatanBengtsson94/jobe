@@ -1,4 +1,6 @@
+use crate::renderer_backend::pipeline_builder::PipelineBuilder;
 use std::sync::Arc;
+use wgpu::util::RenderEncoder;
 use winit::window::Window;
 
 pub struct Context<'window> {
@@ -7,6 +9,7 @@ pub struct Context<'window> {
     device: wgpu::Device,
     queue: wgpu::Queue,
     surface_config: wgpu::SurfaceConfiguration,
+    render_pipeline: wgpu::RenderPipeline,
 }
 
 impl<'window> Context<'window> {
@@ -46,12 +49,17 @@ impl<'window> Context<'window> {
             .expect("Surface not supported by adapter");
         surface.configure(&device, &surface_config);
 
+        let pipeline_builder =
+            PipelineBuilder::new("shader.wgsl", "vs_main", "fs_main", surface_config.format);
+        let render_pipeline = pipeline_builder.build_pipeline(&device);
+
         Self {
             surface,
             adapter,
             device,
             queue,
             surface_config,
+            render_pipeline,
         }
     }
 
@@ -89,7 +97,11 @@ impl<'window> Context<'window> {
             timestamp_writes: None,
         };
 
-        command_encoder.begin_render_pass(&render_pass_descriptor);
+        {
+            let mut renderpass = command_encoder.begin_render_pass(&render_pass_descriptor);
+            renderpass.set_pipeline(&self.render_pipeline);
+            renderpass.draw(0..3, 0..1);
+        }
         self.queue.submit(Some(command_encoder.finish()));
 
         surface_texture.present();
