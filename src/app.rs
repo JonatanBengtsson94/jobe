@@ -1,11 +1,9 @@
-use input::handle_key_event;
+use crate::input::handle_key_event;
 use winit::application::ApplicationHandler;
 use winit::dpi::LogicalSize;
 use winit::event::WindowEvent;
 use winit::event_loop::ActiveEventLoop;
 use winit::window::{Window, WindowAttributes, WindowId};
-
-mod input;
 
 #[derive(Default)]
 pub struct App {
