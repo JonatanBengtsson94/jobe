@@ -30,7 +30,6 @@ impl PipelineBuilder {
 
     pub fn build_pipeline(&self, device: &wgpu::Device) -> wgpu::RenderPipeline {
         let mut filepath = current_dir().expect("Could not find current directory.");
-        filepath.push("src");
         filepath.push("shaders");
         filepath.push(&self.shader_filename);
         let filepath = filepath
