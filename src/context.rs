@@ -1,4 +1,5 @@
 use crate::renderer_backend::mesh_builder;
+use crate::renderer_backend::mesh_builder::Mesh;
 use crate::renderer_backend::pipeline_builder::PipelineBuilder;
 use std::sync::Arc;
 use wgpu::util::RenderEncoder;
@@ -12,6 +13,7 @@ pub struct Context<'window> {
     surface_config: wgpu::SurfaceConfiguration,
     render_pipeline: wgpu::RenderPipeline,
     triangle_mesh: wgpu::Buffer,
+    quad_mesh: Mesh,
 }
 
 impl<'window> Context<'window> {
@@ -52,6 +54,7 @@ impl<'window> Context<'window> {
         surface.configure(&device, &surface_config);
 
         let triangle_mesh = mesh_builder::make_triangle(&device);
+        let quad_mesh = mesh_builder::make_quad(&device);
 
         let mut pipeline_builder =
             PipelineBuilder::new("shader.wgsl", "vs_main", "fs_main", surface_config.format);
@@ -66,6 +69,7 @@ impl<'window> Context<'window> {
             surface_config,
             render_pipeline,
             triangle_mesh,
+            quad_mesh,
         }
     }
 
@@ -106,6 +110,14 @@ impl<'window> Context<'window> {
         {
             let mut renderpass = command_encoder.begin_render_pass(&render_pass_descriptor);
             renderpass.set_pipeline(&self.render_pipeline);
+
+            renderpass.set_vertex_buffer(0, self.quad_mesh.vertex_buffer.slice(..));
+            renderpass.set_index_buffer(
+                self.quad_mesh.index_buffer.slice(..),
+                wgpu::IndexFormat::Uint16,
+            );
+            renderpass.draw_indexed(0..6, 0, 0..1);
+
             renderpass.set_vertex_buffer(0, self.triangle_mesh.slice(..));
             renderpass.draw(0..3, 0..1);
         }
