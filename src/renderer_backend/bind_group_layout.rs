@@ -39,6 +39,8 @@ impl<'device> Builder<'device> {
                 entries: &self.entries,
             });
 
+        self.entries.clear();
+
         return layout;
     }
 }
