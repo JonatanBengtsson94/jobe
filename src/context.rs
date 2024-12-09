@@ -1,8 +1,7 @@
 use crate::renderer_backend::mesh_builder;
 use crate::renderer_backend::mesh_builder::Mesh;
-use crate::renderer_backend::pipeline_builder::PipelineBuilder;
+use crate::renderer_backend::pipeline;
 use std::sync::Arc;
-use wgpu::util::RenderEncoder;
 use winit::window::Window;
 
 pub struct Context<'window> {
@@ -56,10 +55,15 @@ impl<'window> Context<'window> {
         let triangle_mesh = mesh_builder::make_triangle(&device);
         let quad_mesh = mesh_builder::make_quad(&device);
 
-        let mut pipeline_builder =
-            PipelineBuilder::new("shader.wgsl", "vs_main", "fs_main", surface_config.format);
-        pipeline_builder.add_buffer_layout(mesh_builder::Vertex::get_layout());
-        let render_pipeline = pipeline_builder.build_pipeline(&device);
+        let mut pipeline_builder = pipeline::Builder::new(
+            "shader.wgsl",
+            "vs_main",
+            "fs_main",
+            surface_config.format,
+            &device,
+        );
+        pipeline_builder.add_vertex_buffer_layout(mesh_builder::Vertex::get_layout());
+        let render_pipeline = pipeline_builder.build_pipeline();
 
         Self {
             surface,
