@@ -1,7 +1,9 @@
+use crate::renderer_backend::material::Material;
 use crate::renderer_backend::mesh_builder::Mesh;
 use crate::renderer_backend::pipeline;
 use crate::renderer_backend::{bind_group_layout, mesh_builder};
 use std::sync::Arc;
+use wgpu::util::RenderEncoder;
 use winit::window::Window;
 
 pub struct Context<'window> {
@@ -13,6 +15,7 @@ pub struct Context<'window> {
     render_pipeline: wgpu::RenderPipeline,
     triangle_mesh: wgpu::Buffer,
     quad_mesh: Mesh,
+    triangle_material: Material,
 }
 
 impl<'window> Context<'window> {
@@ -71,6 +74,13 @@ impl<'window> Context<'window> {
         pipeline_builder.add_bind_group_layout(&material_bind_group_layout);
         let render_pipeline = pipeline_builder.build_pipeline("render_pipeline");
 
+        let triangle_material = Material::new(
+            "assets/racket.png",
+            &device,
+            &queue,
+            &material_bind_group_layout,
+        );
+
         Self {
             surface,
             adapter,
@@ -80,6 +90,7 @@ impl<'window> Context<'window> {
             render_pipeline,
             triangle_mesh,
             quad_mesh,
+            triangle_material,
         }
     }
 
@@ -121,13 +132,16 @@ impl<'window> Context<'window> {
             let mut renderpass = command_encoder.begin_render_pass(&render_pass_descriptor);
             renderpass.set_pipeline(&self.render_pipeline);
 
+            /*
             renderpass.set_vertex_buffer(0, self.quad_mesh.vertex_buffer.slice(..));
             renderpass.set_index_buffer(
                 self.quad_mesh.index_buffer.slice(..),
                 wgpu::IndexFormat::Uint16,
             );
             renderpass.draw_indexed(0..6, 0, 0..1);
+            */
 
+            renderpass.set_bind_group(0, &self.triangle_material.bind_group, &[]);
             renderpass.set_vertex_buffer(0, self.triangle_mesh.slice(..));
             renderpass.draw(0..3, 0..1);
         }

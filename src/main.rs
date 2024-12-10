@@ -11,7 +11,7 @@ mod renderer_backend;
 // Make sure pieline builder can take bindgroup layout - DONE
 // Construct bindgroup layout - Use it in pipeline
 // Bindgroup builder - DONE
-// Engine has texture
+// Engine has texture - DONE
 // Shader uses texture
 
 fn main() {

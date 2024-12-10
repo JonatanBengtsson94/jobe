@@ -17,14 +17,17 @@ impl Material {
     ) -> Self {
         let mut filepath = current_dir().expect("Could not find current directory.");
         filepath.push(filename);
-        let filepath = fs::read_to_string(filepath).expect("Could not read source code.");
+        let filepath = filepath
+            .into_os_string()
+            .into_string()
+            .expect("Could not get filepath.");
         let bytes = fs::read(filepath).expect("Could not read file.");
         let loaded_image = image::load_from_memory(&bytes).expect("Could not load image.");
-        let converted = loaded_image.to_rgb8();
-        let size = loaded_image.dimensions();
+        let converted = loaded_image.to_rgba8();
+        let (width, height) = loaded_image.dimensions();
         let texture_size = wgpu::Extent3d {
-            width: size.0,
-            height: size.0,
+            width,
+            height,
             depth_or_array_layers: 1,
         };
 
@@ -36,7 +39,7 @@ impl Material {
             size: texture_size,
             sample_count: 1,
             usage: wgpu::TextureUsages::TEXTURE_BINDING | wgpu::TextureUsages::COPY_DST,
-            view_formats: &[wgpu::TextureFormat::Rgba8Unorm],
+            view_formats: &[],
         };
         let texture = device.create_texture(&texture_descriptor);
 
@@ -50,8 +53,8 @@ impl Material {
             &converted,
             wgpu::ImageDataLayout {
                 offset: 0,
-                bytes_per_row: Some(size.0 * 4),
-                rows_per_image: Some(size.1),
+                bytes_per_row: Some(width * 4),
+                rows_per_image: Some(height),
             },
             texture_size,
         );
