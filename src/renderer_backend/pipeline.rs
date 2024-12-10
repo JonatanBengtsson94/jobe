@@ -37,7 +37,7 @@ impl<'device> Builder<'device> {
         self.bind_group_layouts.push(layout);
     }
 
-    pub fn build_pipeline(&mut self) -> wgpu::RenderPipeline {
+    pub fn build_pipeline(&mut self, label: &str) -> wgpu::RenderPipeline {
         let mut filepath = current_dir().expect("Could not find current directory.");
         filepath.push("shaders");
         filepath.push(&self.shader_filename);
@@ -55,7 +55,7 @@ impl<'device> Builder<'device> {
         let shader_module = self.device.create_shader_module(shader_module_descriptor);
 
         let pipeline_layout_descriptor = wgpu::PipelineLayoutDescriptor {
-            label: Some("Render pipeline layout"),
+            label: Some(label),
             bind_group_layouts: &self.bind_group_layouts,
             push_constant_ranges: &[],
         };
@@ -70,7 +70,7 @@ impl<'device> Builder<'device> {
         })];
 
         let render_pipeline_descriptor = wgpu::RenderPipelineDescriptor {
-            label: Some("Render pipeline"),
+            label: Some(label),
             layout: Some(&render_pipeline_layout),
             vertex: wgpu::VertexState {
                 module: &shader_module,
