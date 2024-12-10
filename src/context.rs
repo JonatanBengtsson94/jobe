@@ -7,10 +7,8 @@ use winit::window::Window;
 
 pub struct Context<'window> {
     surface: wgpu::Surface<'window>,
-    adapter: wgpu::Adapter,
     device: wgpu::Device,
     queue: wgpu::Queue,
-    surface_config: wgpu::SurfaceConfiguration,
     render_pipeline: wgpu::RenderPipeline,
     quad_mesh: QuadMesh,
     triangle_material: Material,
@@ -80,10 +78,8 @@ impl<'window> Context<'window> {
 
         Self {
             surface,
-            adapter,
             device,
             queue,
-            surface_config,
             render_pipeline,
             quad_mesh,
             triangle_material,
