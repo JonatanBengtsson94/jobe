@@ -7,10 +7,10 @@ mod input;
 mod renderer_backend;
 
 // TODO::
-// Bindgroup layout builder - Describe the shape of data going into shader
-// Make sure pieline builder can take bindgroup layout
+// Bindgroup layout builder - Describe the shape of data going into shader - DONE
+// Make sure pieline builder can take bindgroup layout - DONE
 // Construct bindgroup layout - Use it in pipeline
-// Bindgroup builder
+// Bindgroup builder - DONE
 // Engine has texture
 // Shader uses texture
 
