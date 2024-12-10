@@ -13,7 +13,6 @@ pub struct Context<'window> {
     queue: wgpu::Queue,
     surface_config: wgpu::SurfaceConfiguration,
     render_pipeline: wgpu::RenderPipeline,
-    triangle_mesh: wgpu::Buffer,
     quad_mesh: Mesh,
     triangle_material: Material,
 }
@@ -55,7 +54,6 @@ impl<'window> Context<'window> {
             .expect("Surface not supported by adapter");
         surface.configure(&device, &surface_config);
 
-        let triangle_mesh = mesh_builder::make_triangle(&device);
         let quad_mesh = mesh_builder::make_quad(&device);
 
         let mut bind_group_layout_builder = bind_group_layout::Builder::new(&device);
@@ -88,16 +86,15 @@ impl<'window> Context<'window> {
             queue,
             surface_config,
             render_pipeline,
-            triangle_mesh,
             quad_mesh,
             triangle_material,
         }
     }
 
     pub fn render(&mut self) -> Result<(), wgpu::SurfaceError> {
-        let surface_texture = self.surface.get_current_texture()?;
+        let current_frame = self.surface.get_current_texture()?;
         let image_view_descriptor = wgpu::TextureViewDescriptor::default();
-        let image_view = surface_texture.texture.create_view(&image_view_descriptor);
+        let image_view = current_frame.texture.create_view(&image_view_descriptor);
 
         let command_encoder_descriptor = wgpu::CommandEncoderDescriptor {
             label: Some("Encoder"),
@@ -132,22 +129,17 @@ impl<'window> Context<'window> {
             let mut renderpass = command_encoder.begin_render_pass(&render_pass_descriptor);
             renderpass.set_pipeline(&self.render_pipeline);
 
-            /*
+            renderpass.set_bind_group(0, &self.triangle_material.bind_group, &[]);
             renderpass.set_vertex_buffer(0, self.quad_mesh.vertex_buffer.slice(..));
             renderpass.set_index_buffer(
                 self.quad_mesh.index_buffer.slice(..),
                 wgpu::IndexFormat::Uint16,
             );
             renderpass.draw_indexed(0..6, 0, 0..1);
-            */
-
-            renderpass.set_bind_group(0, &self.triangle_material.bind_group, &[]);
-            renderpass.set_vertex_buffer(0, self.triangle_mesh.slice(..));
-            renderpass.draw(0..3, 0..1);
         }
         self.queue.submit(Some(command_encoder.finish()));
 
-        surface_texture.present();
+        current_frame.present();
         Ok(())
     }
 }

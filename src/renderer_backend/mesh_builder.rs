@@ -27,32 +27,6 @@ impl Vertex {
     }
 }
 
-pub fn make_triangle(device: &wgpu::Device) -> wgpu::Buffer {
-    let vertices = [
-        Vertex {
-            position: [-0.75, -0.75],
-            color: [1.0, 0.0, 0.0],
-        },
-        Vertex {
-            position: [0.75, -0.75],
-            color: [0.0, 1.0, 0.0],
-        },
-        Vertex {
-            position: [0.0, 0.75],
-            color: [0.0, 0.0, 1.0],
-        },
-    ];
-    let bytes = any_as_u8_slice(&vertices);
-
-    let buffer_descriptor = wgpu::util::BufferInitDescriptor {
-        label: Some("Triangle vertex buffer"),
-        contents: &bytes,
-        usage: wgpu::BufferUsages::VERTEX,
-    };
-    let vertex_buffer = device.create_buffer_init(&buffer_descriptor);
-    vertex_buffer
-}
-
 pub fn make_quad(device: &wgpu::Device) -> Mesh {
     let vertices = [
         Vertex {
