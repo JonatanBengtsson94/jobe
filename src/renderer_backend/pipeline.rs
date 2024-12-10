@@ -45,7 +45,6 @@ impl<'device> Builder<'device> {
             .into_os_string()
             .into_string()
             .expect("Unicode conversion failure");
-        println!("{}", filepath);
         let source_code = fs::read_to_string(filepath).expect("Could not read source code.");
 
         let shader_module_descriptor = wgpu::ShaderModuleDescriptor {
