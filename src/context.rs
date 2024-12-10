@@ -1,9 +1,8 @@
+use crate::renderer_backend::bind_group_layout;
 use crate::renderer_backend::material::Material;
-use crate::renderer_backend::mesh_builder::Mesh;
+use crate::renderer_backend::mesh::{QuadMesh, Vertex};
 use crate::renderer_backend::pipeline;
-use crate::renderer_backend::{bind_group_layout, mesh_builder};
 use std::sync::Arc;
-use wgpu::util::RenderEncoder;
 use winit::window::Window;
 
 pub struct Context<'window> {
@@ -13,7 +12,7 @@ pub struct Context<'window> {
     queue: wgpu::Queue,
     surface_config: wgpu::SurfaceConfiguration,
     render_pipeline: wgpu::RenderPipeline,
-    quad_mesh: Mesh,
+    quad_mesh: QuadMesh,
     triangle_material: Material,
 }
 
@@ -54,7 +53,7 @@ impl<'window> Context<'window> {
             .expect("Surface not supported by adapter");
         surface.configure(&device, &surface_config);
 
-        let quad_mesh = mesh_builder::make_quad(&device);
+        let quad_mesh = QuadMesh::new(&device);
 
         let mut bind_group_layout_builder = bind_group_layout::Builder::new(&device);
         bind_group_layout_builder.add_material();
@@ -68,7 +67,7 @@ impl<'window> Context<'window> {
             surface_config.format,
             &device,
         );
-        pipeline_builder.add_vertex_buffer_layout(mesh_builder::Vertex::get_layout());
+        pipeline_builder.add_vertex_buffer_layout(Vertex::get_layout());
         pipeline_builder.add_bind_group_layout(&material_bind_group_layout);
         let render_pipeline = pipeline_builder.build_pipeline("render_pipeline");
 
