@@ -3,16 +3,9 @@ use winit::event_loop::{ControlFlow, EventLoop};
 
 mod app;
 mod context;
+mod ecs;
 mod input;
 mod renderer_backend;
-
-// TODO::
-// Bindgroup layout builder - Describe the shape of data going into shader - DONE
-// Make sure pieline builder can take bindgroup layout - DONE
-// Construct bindgroup layout - Use it in pipeline
-// Bindgroup builder - DONE
-// Engine has texture - DONE
-// Shader uses texture
 
 fn main() {
     let event_loop = EventLoop::new().unwrap();
