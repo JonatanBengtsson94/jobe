@@ -1,4 +1,4 @@
-use super::types::Entity;
+use super::entity::Entity;
 use std::any::Any;
 use std::{any::TypeId, collections::HashMap, usize};
 
