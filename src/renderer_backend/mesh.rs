@@ -9,7 +9,7 @@ pub struct Vertex {
     texture_coords: [f32; 2],
 }
 
-pub struct QuadMesh {
+pub struct Quad {
     pub vertex_buffer: wgpu::Buffer,
     pub index_buffer: wgpu::Buffer,
 }
@@ -27,8 +27,8 @@ impl Vertex {
     }
 }
 
-impl QuadMesh {
-    pub fn new(device: &wgpu::Device) -> QuadMesh {
+impl Quad {
+    pub fn new(device: &wgpu::Device) -> Quad {
         let vertices = [
             Vertex {
                 position: [-1.0, -1.0],
@@ -66,7 +66,7 @@ impl QuadMesh {
         };
         let index_buffer = device.create_buffer_init(&buffer_descriptor);
 
-        QuadMesh {
+        Quad {
             vertex_buffer,
             index_buffer,
         }
