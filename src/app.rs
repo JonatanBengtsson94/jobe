@@ -8,12 +8,12 @@ use winit::event_loop::ActiveEventLoop;
 use winit::window::{Window, WindowAttributes, WindowId};
 
 #[derive(Default)]
-pub struct App<'window> {
+pub struct App<'a> {
     window: Option<Arc<Window>>,
-    context: Option<Context<'window>>,
+    context: Option<Context<'a>>,
 }
 
-impl<'window> ApplicationHandler for App<'window> {
+impl<'a> ApplicationHandler for App<'a> {
     fn resumed(&mut self, event_loop: &ActiveEventLoop) {
         let window_attributes = WindowAttributes::default()
             .with_title("Pong")

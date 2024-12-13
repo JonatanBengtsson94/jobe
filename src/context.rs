@@ -1,20 +1,18 @@
 use crate::renderer_backend::bind_group_layout;
 use crate::renderer_backend::material::Material;
-use crate::renderer_backend::mesh::{QuadMesh, Vertex};
+use crate::renderer_backend::mesh::{Quad, Vertex};
 use crate::renderer_backend::pipeline;
 use std::sync::Arc;
 use winit::window::Window;
 
-pub struct Context<'window> {
-    surface: wgpu::Surface<'window>,
-    device: wgpu::Device,
-    queue: wgpu::Queue,
-    render_pipeline: wgpu::RenderPipeline,
-    quad_mesh: QuadMesh,
-    triangle_material: Material,
+pub struct Context<'a> {
+    pub surface: wgpu::Surface<'a>,
+    pub device: wgpu::Device,
+    pub queue: wgpu::Queue,
+    pub render_pipeline: wgpu::RenderPipeline,
 }
 
-impl<'window> Context<'window> {
+impl<'a> Context<'a> {
     pub async fn new(window: Arc<Window>) -> Self {
         let instance_descriptor = wgpu::InstanceDescriptor {
             backends: wgpu::Backends::all(),
@@ -51,8 +49,6 @@ impl<'window> Context<'window> {
             .expect("Surface not supported by adapter");
         surface.configure(&device, &surface_config);
 
-        let quad_mesh = QuadMesh::new(&device);
-
         let mut bind_group_layout_builder = bind_group_layout::Builder::new(&device);
         bind_group_layout_builder.add_material();
         let material_bind_group_layout =
@@ -69,72 +65,11 @@ impl<'window> Context<'window> {
         pipeline_builder.add_bind_group_layout(&material_bind_group_layout);
         let render_pipeline = pipeline_builder.build_pipeline("render_pipeline");
 
-        let triangle_material = Material::new(
-            "assets/racket.png",
-            &device,
-            &queue,
-            &material_bind_group_layout,
-        );
-
         Self {
             surface,
             device,
             queue,
             render_pipeline,
-            quad_mesh,
-            triangle_material,
         }
-    }
-
-    pub fn render(&mut self) -> Result<(), wgpu::SurfaceError> {
-        let current_frame = self.surface.get_current_texture()?;
-        let image_view_descriptor = wgpu::TextureViewDescriptor::default();
-        let image_view = current_frame.texture.create_view(&image_view_descriptor);
-
-        let command_encoder_descriptor = wgpu::CommandEncoderDescriptor {
-            label: Some("Encoder"),
-        };
-        let mut command_encoder = self
-            .device
-            .create_command_encoder(&command_encoder_descriptor);
-
-        let color_attachment = wgpu::RenderPassColorAttachment {
-            view: &image_view,
-            resolve_target: None,
-            ops: wgpu::Operations {
-                load: wgpu::LoadOp::Clear(wgpu::Color {
-                    r: 0.0,
-                    g: 0.0,
-                    b: 0.0,
-                    a: 1.0,
-                }),
-                store: wgpu::StoreOp::Store,
-            },
-        };
-
-        let render_pass_descriptor = wgpu::RenderPassDescriptor {
-            label: Some("Render pass"),
-            color_attachments: &[Some(color_attachment)],
-            depth_stencil_attachment: None,
-            occlusion_query_set: None,
-            timestamp_writes: None,
-        };
-
-        {
-            let mut renderpass = command_encoder.begin_render_pass(&render_pass_descriptor);
-            renderpass.set_pipeline(&self.render_pipeline);
-
-            renderpass.set_bind_group(0, &self.triangle_material.bind_group, &[]);
-            renderpass.set_vertex_buffer(0, self.quad_mesh.vertex_buffer.slice(..));
-            renderpass.set_index_buffer(
-                self.quad_mesh.index_buffer.slice(..),
-                wgpu::IndexFormat::Uint16,
-            );
-            renderpass.draw_indexed(0..6, 0, 0..1);
-        }
-        self.queue.submit(Some(command_encoder.finish()));
-
-        current_frame.present();
-        Ok(())
     }
 }
