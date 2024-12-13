@@ -1,9 +1,9 @@
 use wgpu::naga::FastHashMap;
 
 use crate::renderer_backend::{material::Material, mesh::Quad};
-
-use super::entity::Entity;
 use std::{any::TypeId, usize};
+
+use super::{entity::Entity, ComponentId};
 
 pub struct Transform {
     position: [f32; 2],
@@ -41,12 +41,17 @@ impl<Component> ComponentArray<Component> {
 
 pub struct ComponentManager {
     component_arrays: FastHashMap<TypeId, ComponentArray<Component>>,
+    component_type_ids: FastHashMap<TypeId, ComponentId>,
 }
 
 impl ComponentManager {
     pub fn new() -> Self {
+        let mut component_type_ids = FastHashMap::default();
+        component_type_ids.insert(TypeId::of::<Transform>(), 0);
+        component_type_ids.insert(TypeId::of::<Sprite>(), 1);
         ComponentManager {
             component_arrays: FastHashMap::default(),
+            component_type_ids,
         }
     }
 
@@ -58,5 +63,10 @@ impl ComponentManager {
             .or_insert(ComponentArray::new());
 
         array.insert(entity, component);
+    }
+
+    pub fn get_component_type_id<Component: 'static>(&self) -> ComponentId {
+        let type_id = TypeId::of::<Component>();
+        self.component_type_ids[&type_id]
     }
 }
