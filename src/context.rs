@@ -1,6 +1,5 @@
 use crate::renderer_backend::bind_group_layout;
-use crate::renderer_backend::material::Material;
-use crate::renderer_backend::mesh::{Quad, Vertex};
+use crate::renderer_backend::mesh::Vertex;
 use crate::renderer_backend::pipeline;
 use std::sync::Arc;
 use winit::window::Window;
