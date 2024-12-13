@@ -1,5 +1,6 @@
 use crate::context::Context;
-use crate::input::handle_key_event;
+use crate::ecs::systems::Input;
+use crate::ecs::systems::Render;
 use std::sync::Arc;
 use winit::application::ApplicationHandler;
 use winit::dpi::LogicalSize;
@@ -43,11 +44,11 @@ impl<'a> ApplicationHandler for App<'a> {
                 event,
                 is_synthetic: false,
                 ..
-            } => handle_key_event(event),
+            } => Input::handle_key_event(event),
 
             WindowEvent::RedrawRequested => {
-                if let Some(context) = self.context.as_mut() {
-                    match context.render() {
+                if let Some(context) = self.context {
+                    match Render::render(&context) {
                         Ok(_) => {}
                         Err(e) => eprintln!("{:?}", e),
                     }
