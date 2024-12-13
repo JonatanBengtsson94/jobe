@@ -4,7 +4,7 @@ use winit::event_loop::{ControlFlow, EventLoop};
 mod app;
 mod context;
 mod ecs;
-mod input;
+mod game_manager;
 mod renderer_backend;
 
 fn main() {
