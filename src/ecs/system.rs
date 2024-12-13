@@ -2,22 +2,21 @@ use crate::context::Context;
 
 use super::component::Sprite;
 
-pub struct Render<'a, 'b> {
-    sprites: &'b Vec<Option<Sprite>>,
-    context: &'a Context<'a>,
-}
+pub struct Render;
 
-impl<'a, 'b> Render<'a, 'b> {
-    pub fn render(&self) -> Result<(), wgpu::SurfaceError> {
-        let current_frame = self.context.surface.get_current_texture()?;
+impl Render {
+    pub fn render(
+        context: &Context,
+        sprites: &Vec<Option<Sprite>>,
+    ) -> Result<(), wgpu::SurfaceError> {
+        let current_frame = context.surface.get_current_texture()?;
         let image_view_descriptor = wgpu::TextureViewDescriptor::default();
         let image_view = current_frame.texture.create_view(&image_view_descriptor);
 
         let command_encoder_descriptor = wgpu::CommandEncoderDescriptor {
             label: Some("Encoder"),
         };
-        let mut command_encoder = self
-            .context
+        let mut command_encoder = context
             .device
             .create_command_encoder(&command_encoder_descriptor);
 
@@ -44,10 +43,9 @@ impl<'a, 'b> Render<'a, 'b> {
         };
 
         let mut renderpass = command_encoder.begin_render_pass(&render_pass_descriptor);
-        renderpass.set_pipeline(&self.context.render_pipeline);
+        renderpass.set_pipeline(&context.render_pipeline);
 
-        // Render based on Sprite component
-        for sprite_option in self.sprites.iter() {
+        for sprite_option in sprites.iter() {
             if let Some(sprite) = sprite_option {
                 renderpass.set_bind_group(0, &sprite.material.bind_group, &[]);
                 renderpass.set_vertex_buffer(0, sprite.quad.vertex_buffer.slice(..));
@@ -59,7 +57,7 @@ impl<'a, 'b> Render<'a, 'b> {
             }
         }
 
-        self.context.queue.submit(Some(command_encoder.finish()));
+        context.queue.submit(Some(command_encoder.finish()));
 
         current_frame.present();
         Ok(())
