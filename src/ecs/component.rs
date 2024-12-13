@@ -1,6 +1,8 @@
+use wgpu::naga::FastHashMap;
+
 use super::entity::Entity;
 use std::any::Any;
-use std::{any::TypeId, collections::HashMap, usize};
+use std::{any::TypeId, usize};
 
 pub struct ComponentArray<T> {
     components: Vec<Option<T>>,
@@ -22,13 +24,13 @@ impl<T> ComponentArray<T> {
 }
 
 pub struct ComponentManager {
-    component_arrays: HashMap<TypeId, Box<dyn Any>>,
+    component_arrays: FastHashMap<TypeId, Box<dyn Any>>,
 }
 
 impl ComponentManager {
     pub fn new() -> Self {
         ComponentManager {
-            component_arrays: HashMap::new(),
+            component_arrays: FastHashMap::default(),
         }
     }
 
