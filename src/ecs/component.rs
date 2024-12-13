@@ -1,21 +1,29 @@
 use wgpu::naga::FastHashMap;
 
 use super::entity::Entity;
-use std::any::Any;
 use std::{any::TypeId, usize};
 
-pub struct ComponentArray<T> {
-    components: Vec<Option<T>>,
+pub struct Transform {
+    position: [f32; 2],
+    scale: [f32; 2],
 }
 
-impl<T> ComponentArray<T> {
+enum Component {
+    Transform(Transform),
+}
+
+pub struct ComponentArray<Component> {
+    components: Vec<Option<Component>>,
+}
+
+impl<Component> ComponentArray<Component> {
     pub fn new() -> Self {
         ComponentArray {
             components: Vec::new(),
         }
     }
 
-    pub fn insert(&mut self, entity: Entity, component: T) {
+    pub fn insert(&mut self, entity: Entity, component: Component) {
         if entity as usize > self.components.len() {
             self.components.resize_with(entity as usize + 1, || None);
         }
@@ -24,7 +32,7 @@ impl<T> ComponentArray<T> {
 }
 
 pub struct ComponentManager {
-    component_arrays: FastHashMap<TypeId, Box<dyn Any>>,
+    component_arrays: FastHashMap<TypeId, ComponentArray<Component>>,
 }
 
 impl ComponentManager {
@@ -34,17 +42,13 @@ impl ComponentManager {
         }
     }
 
-    pub fn add_component<T: 'static>(&mut self, entity: Entity, component: T) {
-        let type_id = TypeId::of::<T>();
+    pub fn add_component(&mut self, entity: Entity, component: Component) {
+        let type_id = TypeId::of::<Component>();
         let array = self
             .component_arrays
             .entry(type_id)
-            .or_insert_with(|| Box::new(ComponentArray::<T>::new()) as Box<dyn Any>);
+            .or_insert(ComponentArray::new());
 
-        if let Some(array) = array.downcast_mut::<ComponentArray<T>>() {
-            array.insert(entity, component);
-        } else {
-            panic!("Failed to downcast to correct component array type.");
-        }
+        array.insert(entity, component);
     }
 }
