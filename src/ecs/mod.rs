@@ -1,3 +1,3 @@
 pub mod component;
 pub mod entity;
-pub mod types;
+pub mod system;

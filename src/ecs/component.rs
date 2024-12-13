@@ -11,8 +11,8 @@ pub struct Transform {
 }
 
 pub struct Sprite {
-    material: Material,
-    quad: Quad,
+    pub material: Material,
+    pub quad: Quad,
 }
 
 enum Component {
