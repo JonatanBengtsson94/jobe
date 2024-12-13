@@ -1,10 +1,10 @@
 use core::fmt;
 use std::{u16, usize};
 
+use super::Signature;
+
 pub type Entity = u16;
-pub const MAX_ENTITIES: usize = u16::MAX as usize;
-pub const MAX_COMPONENTS: u8 = 16;
-pub type Signature = u16;
+const MAX_ENTITIES: usize = u16::MAX as usize;
 
 #[derive(Debug)]
 pub struct EntityManagerError;
