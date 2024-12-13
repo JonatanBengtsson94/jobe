@@ -1,5 +1,7 @@
 use wgpu::naga::FastHashMap;
 
+use crate::renderer_backend::{material::Material, mesh::Quad};
+
 use super::entity::Entity;
 use std::{any::TypeId, usize};
 
@@ -8,8 +10,14 @@ pub struct Transform {
     scale: [f32; 2],
 }
 
+pub struct Sprite {
+    material: Material,
+    quad: Quad,
+}
+
 enum Component {
     Transform(Transform),
+    Sprite(Sprite),
 }
 
 pub struct ComponentArray<Component> {
