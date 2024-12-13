@@ -1,6 +1,7 @@
 use crate::context::Context;
 
-use super::component::Sprite;
+use crate::ecs::component::Sprite;
+use crate::ecs::entity::Entity;
 
 pub struct Render;
 
@@ -17,7 +18,7 @@ impl Render {
             label: Some("Encoder"),
         };
         let mut command_encoder = context
-            .device()
+            .device
             .create_command_encoder(&command_encoder_descriptor);
 
         let color_attachment = wgpu::RenderPassColorAttachment {
