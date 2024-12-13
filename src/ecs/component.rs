@@ -15,7 +15,7 @@ pub struct Sprite {
     pub quad: Quad,
 }
 
-enum Component {
+pub enum Component {
     Transform(Transform),
     Sprite(Sprite),
 }
