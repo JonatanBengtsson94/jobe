@@ -5,6 +5,12 @@ use super::{
     entity::Entity,
 };
 
+pub mod signatures {
+    pub const TRANSFORM: u8 = 0b0000_0001;
+    pub const SPRITE: u8 = 0b0000_0010;
+    pub const VELOCITY: u8 = 0b0000_0100;
+}
+
 pub struct ComponentArray<T> {
     pub components: Vec<Option<T>>,
 }

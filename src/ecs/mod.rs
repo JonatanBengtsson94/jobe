@@ -10,4 +10,3 @@ pub use entity::EntityManager;
 pub use manager::Manager;
 
 pub type Signature = u8;
-pub type ComponentId = u8;

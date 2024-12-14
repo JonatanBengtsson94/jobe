@@ -3,6 +3,7 @@ use winit::event::KeyEvent;
 use crate::context::Context;
 
 use super::{
+    component::signatures::{SPRITE, TRANSFORM},
     components::{Sprite, Transform},
     systems::{Input, Render},
     ComponentManager, Entity, EntityManager,
@@ -28,14 +29,14 @@ impl Manager {
     pub fn add_sprite(&mut self, entity: Entity, sprite: Sprite) {
         self.component_manager.add_sprite(entity, sprite);
         let mut signature = self.entity_manager.get_signature(entity);
-        signature |= 1 << Sprite::ID;
+        signature |= 1 << SPRITE;
         self.entity_manager.set_signature(entity, signature);
     }
 
     pub fn add_transform(&mut self, entity: Entity, transform: Transform) {
         self.component_manager.add_transform(entity, transform);
         let mut signature = self.entity_manager.get_signature(entity);
-        signature |= 1 << Transform::ID;
+        signature |= 1 << TRANSFORM;
         self.entity_manager.set_signature(entity, signature);
     }
 

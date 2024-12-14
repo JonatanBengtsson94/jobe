@@ -1,5 +1,6 @@
 use crate::context::Context;
 
+use crate::ecs::component::signatures::{SPRITE, TRANSFORM};
 use crate::ecs::components::Sprite;
 use crate::ecs::entity::MAX_ENTITIES;
 use crate::ecs::Signature;
@@ -7,7 +8,7 @@ use crate::ecs::Signature;
 pub struct Render;
 
 impl Render {
-    pub const SIGNATURE: Signature = 0b00000011;
+    pub const SIGNATURE: Signature = TRANSFORM | SPRITE;
 
     pub fn render(
         context: &Context,
@@ -52,7 +53,7 @@ impl Render {
             renderpass.set_pipeline(&context.render_pipeline);
 
             for (index, signature) in entity_signatures.iter().enumerate() {
-                if *signature == Render::SIGNATURE {
+                if (*signature & Render::SIGNATURE) == Render::SIGNATURE {
                     if let Some(sprite) = &sprites[index] {
                         renderpass.set_bind_group(0, &sprite.material.bind_group, &[]);
                         renderpass.set_vertex_buffer(0, sprite.quad.vertex_buffer.slice(..));
