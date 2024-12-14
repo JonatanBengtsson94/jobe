@@ -2,12 +2,7 @@ use winit::event::KeyEvent;
 
 use crate::{
     context::Context,
-    ecs::{
-        component::ComponentManager,
-        components::Sprite,
-        entity::{Entity, EntityManager},
-        systems::Render,
-    },
+    ecs::{components::Sprite, systems::Render, ComponentManager, Entity, EntityManager},
 };
 
 use super::systems::Input;
