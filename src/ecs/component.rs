@@ -1,25 +1,9 @@
-use crate::renderer_backend::{material::Material, mesh::Quad};
 use std::usize;
 
-use super::{entity::Entity, ComponentId};
-
-pub struct Transform {
-    position: [f32; 2],
-    scale: [f32; 2],
-}
-
-impl Transform {
-    pub const ID: ComponentId = 0;
-}
-
-pub struct Sprite {
-    pub material: Material,
-    pub quad: Quad,
-}
-
-impl Sprite {
-    pub const ID: ComponentId = 1;
-}
+use super::{
+    components::{Sprite, Transform},
+    entity::Entity,
+};
 
 pub struct ComponentArray<T> {
     pub components: Vec<Option<T>>,
