@@ -3,10 +3,11 @@ use crate::{
     ecs::{
         components::{
             signatures::{SPRITE, TRANSFORM},
-            Sprite,
+            Sprite, Transform,
         },
         Signature, MAX_ENTITIES,
     },
+    renderer_backend::mesh::Quad,
 };
 
 pub struct Render;
@@ -17,6 +18,7 @@ impl Render {
     pub fn render(
         context: &Context,
         sprites: &Vec<Option<Sprite>>,
+        transforms: &Vec<Option<Transform>>,
         entity_signatures: &[Signature; MAX_ENTITIES],
     ) -> Result<(), wgpu::SurfaceError> {
         let current_frame = context.surface.get_current_texture()?;
@@ -59,13 +61,16 @@ impl Render {
             for (index, signature) in entity_signatures.iter().enumerate() {
                 if (*signature & Render::SIGNATURE) == Render::SIGNATURE {
                     if let Some(sprite) = &sprites[index] {
-                        renderpass.set_bind_group(0, &sprite.material.bind_group, &[]);
-                        renderpass.set_vertex_buffer(0, sprite.quad.vertex_buffer.slice(..));
-                        renderpass.set_index_buffer(
-                            sprite.quad.index_buffer.slice(..),
-                            wgpu::IndexFormat::Uint16,
-                        );
-                        renderpass.draw_indexed(0..6, 0, 0..1);
+                        if let Some(transform) = &transforms[index] {
+                            let quad = Quad::new(&context.device, transform);
+                            renderpass.set_bind_group(0, &sprite.material.bind_group, &[]);
+                            renderpass.set_vertex_buffer(0, quad.vertex_buffer.slice(..));
+                            renderpass.set_index_buffer(
+                                quad.index_buffer.slice(..),
+                                wgpu::IndexFormat::Uint16,
+                            );
+                            renderpass.draw_indexed(0..6, 0, 0..1);
+                        }
                     }
                 }
             }

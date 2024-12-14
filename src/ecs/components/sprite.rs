@@ -1,6 +1,5 @@
-use crate::renderer_backend::{material::Material, mesh::Quad};
+use crate::renderer_backend::material::Material;
 
 pub struct Sprite {
     pub material: Material,
-    pub quad: Quad,
 }

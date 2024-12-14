@@ -55,7 +55,7 @@ impl Manager {
 
     pub fn add_velocity(&mut self, entity: Entity, velocity: Velocity) {
         self.velocity_components.insert(entity, velocity);
-        self.entity_signatures[entity as usize] |= 1 << VELOCITY;
+        self.entity_signatures[entity as usize] |= VELOCITY;
     }
 
     pub fn handle_input(&self, key_event: KeyEvent) {
@@ -75,6 +75,7 @@ impl Manager {
         return Render::render(
             context,
             &self.sprite_components.components,
+            &self.transform_components.components,
             &self.entity_signatures,
         );
     }

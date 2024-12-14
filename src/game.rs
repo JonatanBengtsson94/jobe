@@ -3,10 +3,9 @@ use std::time::{Duration, Instant};
 use winit::event::KeyEvent;
 
 use crate::context::Context;
-use crate::ecs::components::{Sprite, Transform};
+use crate::ecs::components::{Sprite, Transform, Velocity};
 use crate::ecs::Manager;
 use crate::renderer_backend::material::Material;
-use crate::renderer_backend::mesh::Quad;
 
 pub struct Game<'a> {
     context: Context<'a>,
@@ -31,10 +30,13 @@ impl<'a> Game<'a> {
                 &context.queue,
                 &context.material_bind_group_layout,
             ),
-            quad: Quad::new(&context.device, &racket_transform),
+        };
+        let racket_velocity = Velocity {
+            velocity: [0.1, 0.0],
         };
         manager.add_sprite(racket, racket_sprite);
         manager.add_transform(racket, racket_transform);
+        manager.add_velocity(racket, racket_velocity);
 
         Game {
             context,
@@ -52,7 +54,6 @@ impl<'a> Game<'a> {
         let now = Instant::now();
         self.delta_time = now - self.last_update;
         self.last_update = now;
-        println!("{:?} {:?}", self.delta_time, self.last_update);
         self.manager.update(self.delta_time.as_secs_f32());
     }
 
