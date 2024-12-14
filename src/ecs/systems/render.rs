@@ -1,9 +1,13 @@
-use crate::context::Context;
-
-use crate::ecs::component::signatures::{SPRITE, TRANSFORM};
-use crate::ecs::components::Sprite;
-use crate::ecs::entity::MAX_ENTITIES;
-use crate::ecs::Signature;
+use crate::{
+    context::Context,
+    ecs::{
+        components::{
+            signatures::{SPRITE, TRANSFORM},
+            Sprite,
+        },
+        Signature, MAX_ENTITIES,
+    },
+};
 
 pub struct Render;
 

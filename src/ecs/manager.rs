@@ -3,13 +3,12 @@ use winit::event::KeyEvent;
 use crate::context::Context;
 
 use super::{
-    component::{
+    components::{
         signatures::{SPRITE, TRANSFORM, VELOCITY},
-        ComponentArray,
+        Sprite, Transform, Velocity,
     },
-    components::{Sprite, Transform, Velocity},
-    systems::{movement::Movement, Input, Render},
-    Entity, Signature, MAX_ENTITIES,
+    systems::{Input, Movement, Render},
+    ComponentArray, Entity, Signature, MAX_ENTITIES,
 };
 
 pub struct Manager {

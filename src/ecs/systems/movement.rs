@@ -1,11 +1,12 @@
 use crate::ecs::{
-    component::signatures::{TRANSFORM, VELOCITY},
-    components::{Transform, Velocity},
-    entity::MAX_ENTITIES,
-    Signature,
+    components::{
+        signatures::{TRANSFORM, VELOCITY},
+        Transform, Velocity,
+    },
+    Signature, MAX_ENTITIES,
 };
 
-pub struct Movement {}
+pub struct Movement;
 
 impl Movement {
     pub const SIGNATURE: Signature = TRANSFORM | VELOCITY;
