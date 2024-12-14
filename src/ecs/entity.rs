@@ -52,7 +52,7 @@ impl EntityManager {
         self.entity_signatures[entity as usize] = signature;
     }
 
-    pub fn get_signature(self, entity: Entity) -> Signature {
+    pub fn get_signature(&self, entity: Entity) -> Signature {
         self.entity_signatures[entity as usize]
     }
 }

@@ -9,6 +9,7 @@ pub struct Context<'a> {
     pub device: wgpu::Device,
     pub queue: wgpu::Queue,
     pub render_pipeline: wgpu::RenderPipeline,
+    pub material_bind_group_layout: wgpu::BindGroupLayout,
 }
 
 impl<'a> Context<'a> {
@@ -69,6 +70,7 @@ impl<'a> Context<'a> {
             device,
             queue,
             render_pipeline,
+            material_bind_group_layout,
         }
     }
 }
