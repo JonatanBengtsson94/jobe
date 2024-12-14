@@ -1,3 +1,5 @@
+use std::time::{Duration, Instant};
+
 use winit::event::KeyEvent;
 
 use crate::context::Context;
@@ -9,6 +11,8 @@ use crate::renderer_backend::mesh::Quad;
 pub struct Game<'a> {
     context: Context<'a>,
     manager: Manager,
+    last_update: Instant,
+    delta_time: Duration,
 }
 
 impl<'a> Game<'a> {
@@ -32,14 +36,25 @@ impl<'a> Game<'a> {
         manager.add_sprite(racket, racket_sprite);
         manager.add_transform(racket, racket_transform);
 
-        Game { context, manager }
+        Game {
+            context,
+            manager,
+            last_update: Instant::now(),
+            delta_time: Duration::default(),
+        }
     }
 
     pub fn handle_input(&self, key_event: KeyEvent) {
         self.manager.handle_input(key_event);
     }
 
-    pub fn update(&self) {}
+    pub fn update(&mut self) {
+        let now = Instant::now();
+        self.delta_time = now - self.last_update;
+        self.last_update = now;
+        println!("{:?} {:?}", self.delta_time, self.last_update);
+        self.manager.update(self.delta_time.as_secs_f32());
+    }
 
     pub fn render(&self) -> Result<(), wgpu::SurfaceError> {
         self.manager.render(&self.context)

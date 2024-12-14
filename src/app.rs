@@ -52,7 +52,10 @@ impl<'a> ApplicationHandler for App<'a> {
             WindowEvent::RedrawRequested => {
                 if let Some(game) = &mut self.game {
                     game.update();
-                    game.render().expect("SurfaceError!.");
+                    game.render().expect("SurfaceError!");
+                    if let Some(window) = &self.window {
+                        window.request_redraw();
+                    }
                 }
             }
 
