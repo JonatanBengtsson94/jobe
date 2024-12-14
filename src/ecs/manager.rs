@@ -1,11 +1,12 @@
 use winit::event::KeyEvent;
 
-use crate::{
-    context::Context,
-    ecs::{components::Sprite, systems::Render, ComponentManager, Entity, EntityManager},
-};
+use crate::context::Context;
 
-use super::systems::Input;
+use super::{
+    components::{Sprite, Transform},
+    systems::{Input, Render},
+    ComponentManager, Entity, EntityManager,
+};
 
 pub struct Manager {
     entity_manager: EntityManager,
@@ -28,6 +29,13 @@ impl Manager {
         self.component_manager.add_sprite(entity, sprite);
         let mut signature = self.entity_manager.get_signature(entity);
         signature |= 1 << Sprite::ID;
+        self.entity_manager.set_signature(entity, signature);
+    }
+
+    pub fn add_transform(&mut self, entity: Entity, transform: Transform) {
+        self.component_manager.add_transform(entity, transform);
+        let mut signature = self.entity_manager.get_signature(entity);
+        signature |= 1 << Transform::ID;
         self.entity_manager.set_signature(entity, signature);
     }
 

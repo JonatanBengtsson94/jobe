@@ -40,4 +40,8 @@ impl ComponentManager {
     pub fn add_sprite(&mut self, entity: Entity, sprite: Sprite) {
         self.sprite_components.insert(entity, sprite);
     }
+
+    pub fn add_transform(&mut self, entity: Entity, transform: Transform) {
+        self.transform_components.insert(entity, transform);
+    }
 }
