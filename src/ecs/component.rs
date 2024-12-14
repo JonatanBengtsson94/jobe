@@ -1,7 +1,5 @@
-use wgpu::naga::FastHashMap;
-
 use crate::renderer_backend::{material::Material, mesh::Quad};
-use std::{any::TypeId, usize};
+use std::usize;
 
 use super::{entity::Entity, ComponentId};
 
@@ -10,28 +8,31 @@ pub struct Transform {
     scale: [f32; 2],
 }
 
+impl Transform {
+    pub const ID: ComponentId = 0;
+}
+
 pub struct Sprite {
     pub material: Material,
     pub quad: Quad,
 }
 
-pub enum Component {
-    Transform(Transform),
-    Sprite(Sprite),
+impl Sprite {
+    pub const ID: ComponentId = 1;
 }
 
-pub struct ComponentArray<Component> {
-    components: Vec<Option<Component>>,
+pub struct ComponentArray<T> {
+    pub components: Vec<Option<T>>,
 }
 
-impl<Component> ComponentArray<Component> {
+impl<T> ComponentArray<T> {
     pub fn new() -> Self {
         ComponentArray {
             components: Vec::new(),
         }
     }
 
-    pub fn insert(&mut self, entity: Entity, component: Component) {
+    pub fn insert(&mut self, entity: Entity, component: T) {
         if entity as usize > self.components.len() {
             self.components.resize_with(entity as usize + 1, || None);
         }
@@ -40,33 +41,19 @@ impl<Component> ComponentArray<Component> {
 }
 
 pub struct ComponentManager {
-    component_arrays: FastHashMap<TypeId, ComponentArray<Component>>,
-    component_type_ids: FastHashMap<TypeId, ComponentId>,
+    pub transform_components: ComponentArray<Transform>,
+    pub sprite_components: ComponentArray<Sprite>,
 }
 
 impl ComponentManager {
     pub fn new() -> Self {
-        let mut component_type_ids = FastHashMap::default();
-        component_type_ids.insert(TypeId::of::<Transform>(), 0);
-        component_type_ids.insert(TypeId::of::<Sprite>(), 1);
         ComponentManager {
-            component_arrays: FastHashMap::default(),
-            component_type_ids,
+            transform_components: ComponentArray::new(),
+            sprite_components: ComponentArray::new(),
         }
     }
 
-    pub fn add_component(&mut self, entity: Entity, component: Component) {
-        let type_id = TypeId::of::<Component>();
-        let array = self
-            .component_arrays
-            .entry(type_id)
-            .or_insert(ComponentArray::new());
-
-        array.insert(entity, component);
-    }
-
-    pub fn get_component_type_id<Component: 'static>(&self) -> ComponentId {
-        let type_id = TypeId::of::<Component>();
-        self.component_type_ids[&type_id]
+    pub fn add_sprite(&mut self, entity: Entity, sprite: Sprite) {
+        self.sprite_components.insert(entity, sprite);
     }
 }

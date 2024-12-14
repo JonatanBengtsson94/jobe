@@ -1,7 +1,7 @@
 use winit::event::KeyEvent;
 
 use crate::context::Context;
-use crate::ecs::component::{Component, Sprite};
+use crate::ecs::component::Sprite;
 use crate::ecs::Manager;
 use crate::renderer_backend::material::Material;
 use crate::renderer_backend::mesh::Quad;
@@ -24,7 +24,7 @@ impl<'a> Game<'a> {
             ),
             quad: Quad::new(&context.device),
         };
-        manager.add_component(racket, Component::Sprite(racket_sprite));
+        manager.add_sprite(racket, racket_sprite);
 
         Game { context, manager }
     }

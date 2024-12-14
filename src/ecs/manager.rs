@@ -3,17 +3,17 @@ use winit::event::KeyEvent;
 use crate::{
     context::Context,
     ecs::{
-        component::{Component, ComponentManager, Sprite},
+        component::{ComponentManager, Sprite},
         entity::{Entity, EntityManager},
         systems::Render,
     },
-    renderer_backend::{material::Material, mesh::Quad},
 };
+
+use super::systems::Input;
 
 pub struct Manager {
     entity_manager: EntityManager,
     component_manager: ComponentManager,
-    render: Render,
 }
 
 impl Manager {
@@ -21,7 +21,6 @@ impl Manager {
         Manager {
             entity_manager: EntityManager::new(),
             component_manager: ComponentManager::new(),
-            render: Render::new(),
         }
     }
 
@@ -29,14 +28,22 @@ impl Manager {
         self.entity_manager.create_entity().unwrap()
     }
 
-    pub fn add_component(&mut self, entity: Entity, component: Component) {
-        self.component_manager.add_component(entity, component);
-        let signature = self.entity_manager.get_signature(entity);
-        // Set signature bits based on componentid
-        // entitymanager.setsignature
+    pub fn add_sprite(&mut self, entity: Entity, sprite: Sprite) {
+        self.component_manager.add_sprite(entity, sprite);
+        let mut signature = self.entity_manager.get_signature(entity);
+        signature |= 1 << Sprite::ID;
+        self.entity_manager.set_signature(entity, signature);
     }
 
     pub fn render(&self, context: &Context) {
-        self.render.render(context);
+        Render::render(
+            context,
+            &self.component_manager.sprite_components.components,
+            &self.entity_manager.entity_signatures,
+        );
+    }
+
+    pub fn handle_input(&self, key_event: KeyEvent) {
+        Input::handle_key_event(key_event);
     }
 }

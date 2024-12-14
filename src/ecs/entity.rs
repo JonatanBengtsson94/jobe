@@ -20,7 +20,7 @@ impl std::error::Error for EntityManagerError {}
 pub struct EntityManager {
     active_entities_count: u16,
     available_entities: u16,
-    entity_signatures: [Signature; MAX_ENTITIES],
+    pub entity_signatures: [Signature; MAX_ENTITIES],
 }
 
 impl EntityManager {
