@@ -47,19 +47,21 @@ impl Render {
             timestamp_writes: None,
         };
 
-        let mut renderpass = command_encoder.begin_render_pass(&render_pass_descriptor);
-        renderpass.set_pipeline(&context.render_pipeline);
+        {
+            let mut renderpass = command_encoder.begin_render_pass(&render_pass_descriptor);
+            renderpass.set_pipeline(&context.render_pipeline);
 
-        for (index, signature) in entity_signatures.iter().enumerate() {
-            if *signature == Render::SIGNATURE {
-                if let Some(sprite) = &sprites[index] {
-                    renderpass.set_bind_group(0, &sprite.material.bind_group, &[]);
-                    renderpass.set_vertex_buffer(0, sprite.quad.vertex_buffer.slice(..));
-                    renderpass.set_index_buffer(
-                        sprite.quad.index_buffer.slice(..),
-                        wgpu::IndexFormat::Uint16,
-                    );
-                    renderpass.draw_indexed(0..6, 0, 0..1);
+            for (index, signature) in entity_signatures.iter().enumerate() {
+                if *signature == Render::SIGNATURE {
+                    if let Some(sprite) = &sprites[index] {
+                        renderpass.set_bind_group(0, &sprite.material.bind_group, &[]);
+                        renderpass.set_vertex_buffer(0, sprite.quad.vertex_buffer.slice(..));
+                        renderpass.set_index_buffer(
+                            sprite.quad.index_buffer.slice(..),
+                            wgpu::IndexFormat::Uint16,
+                        );
+                        renderpass.draw_indexed(0..6, 0, 0..1);
+                    }
                 }
             }
         }
