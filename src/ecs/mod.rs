@@ -2,7 +2,6 @@ pub mod component;
 pub mod components;
 pub mod entity;
 pub mod manager;
-pub mod system;
 pub mod systems;
 
 pub use component::ComponentManager;
