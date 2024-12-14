@@ -45,12 +45,12 @@ impl Manager {
 
     pub fn add_sprite(&mut self, entity: Entity, sprite: Sprite) {
         self.sprite_components.insert(entity, sprite);
-        self.entity_signatures[entity as usize] |= 1 << SPRITE;
+        self.entity_signatures[entity as usize] |= SPRITE;
     }
 
     pub fn add_transform(&mut self, entity: Entity, transform: Transform) {
         self.transform_components.insert(entity, transform);
-        self.entity_signatures[entity as usize] |= 1 << TRANSFORM;
+        self.entity_signatures[entity as usize] |= TRANSFORM;
     }
 
     pub fn add_velocity(&mut self, entity: Entity, velocity: Velocity) {
@@ -62,7 +62,7 @@ impl Manager {
         Input::handle_key_event(key_event);
     }
 
-    pub fn update(&self, delta_time: f32) {
+    pub fn update(&mut self, delta_time: f32) {
         Movement::update(
             delta_time,
             &mut self.transform_components.components,
