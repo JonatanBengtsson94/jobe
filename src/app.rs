@@ -1,6 +1,5 @@
 use crate::context::Context;
-use crate::ecs::systems::Input;
-use crate::ecs::systems::Render;
+use crate::game_manager::GameManager;
 use std::sync::Arc;
 use winit::application::ApplicationHandler;
 use winit::dpi::LogicalSize;
@@ -11,7 +10,7 @@ use winit::window::{Window, WindowAttributes, WindowId};
 #[derive(Default)]
 pub struct App<'a> {
     window: Option<Arc<Window>>,
-    context: Option<Context<'a>>,
+    game_manager: Option<GameManager<'a>>,
 }
 
 impl<'a> ApplicationHandler for App<'a> {
@@ -28,7 +27,7 @@ impl<'a> ApplicationHandler for App<'a> {
         self.window = Some(window.clone());
 
         let context = pollster::block_on(Context::new(window.clone()));
-        self.context = Some(context);
+        self.game_manager = Some(GameManager::new(context));
     }
 
     fn window_event(
@@ -44,14 +43,16 @@ impl<'a> ApplicationHandler for App<'a> {
                 event,
                 is_synthetic: false,
                 ..
-            } => Input::handle_key_event(event),
+            } => {
+                if let Some(game_manager) = &self.game_manager {
+                    game_manager.handle_input(event)
+                }
+            }
 
             WindowEvent::RedrawRequested => {
-                if let Some(context) = self.context {
-                    match Render::render(&context) {
-                        Ok(_) => {}
-                        Err(e) => eprintln!("{:?}", e),
-                    }
+                if let Some(game_manager) = &mut self.game_manager {
+                    game_manager.update();
+                    game_manager.render();
                 }
             }
 

@@ -1,21 +1,25 @@
-use crate::ecs::{
-    component::{Component, ComponentManager},
-    entity::{Entity, EntityManager},
-    system::SystemManager,
+use winit::event::KeyEvent;
+
+use crate::{
+    context::Context,
+    ecs::{
+        component::{Component, ComponentManager},
+        entity::{Entity, EntityManager},
+    },
 };
 
-pub struct GameManager {
+pub struct GameManager<'a> {
+    context: Context<'a>,
     entity_manager: EntityManager,
     component_manager: ComponentManager,
-    system_manager: SystemManager,
 }
 
-impl GameManager {
-    pub fn new() -> Self {
+impl<'a> GameManager<'a> {
+    pub fn new(context: Context<'a>) -> Self {
         GameManager {
+            context,
             entity_manager: EntityManager::new(),
             component_manager: ComponentManager::new(),
-            system_manager: SystemManager::new(),
         }
     }
 
@@ -24,6 +28,11 @@ impl GameManager {
         let signature = self.entity_manager.get_signature(entity);
         // Set signature bits based on componentid
         // entitymanager.setsignature
-        // Tell system manager?
     }
+
+    pub fn handle_input(&self, key_event: KeyEvent) {}
+
+    pub fn update(&mut self) {}
+
+    pub fn render(&mut self) {}
 }
