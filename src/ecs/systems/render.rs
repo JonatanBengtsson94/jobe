@@ -1,7 +1,7 @@
 use crate::context::Context;
 
 use crate::ecs::component::Sprite;
-use crate::ecs::entity::{Entity, MAX_ENTITIES};
+use crate::ecs::entity::MAX_ENTITIES;
 use crate::ecs::Signature;
 
 pub struct Render {
