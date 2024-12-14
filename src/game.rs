@@ -29,7 +29,9 @@ impl<'a> Game<'a> {
         Game { context, manager }
     }
 
-    pub fn handle_input(&self, key_event: KeyEvent) {}
+    pub fn handle_input(&self, key_event: KeyEvent) {
+        self.manager.handle_input(key_event);
+    }
 
     pub fn update(&self) {}
 
