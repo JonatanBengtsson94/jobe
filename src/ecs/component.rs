@@ -1,7 +1,7 @@
 use std::usize;
 
 use super::{
-    components::{Sprite, Transform},
+    components::{Sprite, Transform, Velocity},
     entity::Entity,
 };
 
@@ -33,6 +33,7 @@ impl<T> ComponentArray<T> {
 pub struct ComponentManager {
     pub transform_components: ComponentArray<Transform>,
     pub sprite_components: ComponentArray<Sprite>,
+    pub velocity_components: ComponentArray<Velocity>,
 }
 
 impl ComponentManager {
@@ -40,6 +41,7 @@ impl ComponentManager {
         ComponentManager {
             transform_components: ComponentArray::new(),
             sprite_components: ComponentArray::new(),
+            velocity_components: ComponentArray::new(),
         }
     }
 
@@ -49,5 +51,9 @@ impl ComponentManager {
 
     pub fn add_transform(&mut self, entity: Entity, transform: Transform) {
         self.transform_components.insert(entity, transform);
+    }
+
+    pub fn add_velocity(&mut self, entity: Entity, velocity: Velocity) {
+        self.velocity_components.insert(entity, velocity);
     }
 }
