@@ -1,6 +1,6 @@
 use crate::context::Context;
 
-use crate::ecs::component::Sprite;
+use crate::ecs::components::Sprite;
 use crate::ecs::entity::MAX_ENTITIES;
 use crate::ecs::Signature;
 

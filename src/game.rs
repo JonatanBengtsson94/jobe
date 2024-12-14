@@ -17,7 +17,7 @@ impl<'a> Game<'a> {
         let racket = manager.create_entity();
         let racket_sprite = Sprite {
             material: Material::new(
-                "racket.png",
+                "assets/racket.png",
                 &context.device,
                 &context.queue,
                 &context.material_bind_group_layout,

@@ -1,3 +1,5 @@
+use crate::ecs::ComponentId;
+
 pub struct Transform {
     position: [f32; 2],
     scale: [f32; 2],

@@ -17,7 +17,7 @@ impl<T> ComponentArray<T> {
     }
 
     pub fn insert(&mut self, entity: Entity, component: T) {
-        if entity as usize > self.components.len() {
+        if entity as usize >= self.components.len() {
             self.components.resize_with(entity as usize + 1, || None);
         }
         self.components[entity as usize] = Some(component);
