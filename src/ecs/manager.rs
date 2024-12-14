@@ -36,8 +36,8 @@ impl Manager {
         self.entity_manager.set_signature(entity, signature);
     }
 
-    pub fn render(&self, context: &Context) {
-        Render::render(
+    pub fn render(&self, context: &Context) -> Result<(), wgpu::SurfaceError> {
+        return Render::render(
             context,
             &self.component_manager.sprite_components.components,
             &self.entity_manager.entity_signatures,

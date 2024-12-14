@@ -33,7 +33,7 @@ impl<'a> Game<'a> {
 
     pub fn update(&self) {}
 
-    pub fn render(&self) {
+    pub fn render(&self) -> Result<(), wgpu::SurfaceError> {
         self.manager.render(&self.context)
     }
 }
