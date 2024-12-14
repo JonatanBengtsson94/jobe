@@ -1,7 +1,7 @@
 use winit::event::KeyEvent;
 
 use crate::context::Context;
-use crate::ecs::component::Sprite;
+use crate::ecs::components::Sprite;
 use crate::ecs::Manager;
 use crate::renderer_backend::material::Material;
 use crate::renderer_backend::mesh::Quad;
