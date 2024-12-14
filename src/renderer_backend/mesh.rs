@@ -3,6 +3,8 @@ use std::slice;
 
 use wgpu::util::DeviceExt;
 
+use crate::ecs::components::Transform;
+
 #[repr(C)]
 pub struct Vertex {
     position: [f32; 2],
@@ -28,8 +30,8 @@ impl Vertex {
 }
 
 impl Quad {
-    pub fn new(device: &wgpu::Device) -> Quad {
-        let vertices = [
+    pub fn new(device: &wgpu::Device, transform: &Transform) -> Quad {
+        let mut vertices = [
             Vertex {
                 position: [-1.0, -1.0],
                 texture_coords: [0.0, 1.0],
@@ -47,6 +49,14 @@ impl Quad {
                 texture_coords: [0.0, 0.0],
             },
         ];
+
+        for vertex in vertices.iter_mut() {
+            vertex.position = [
+                vertex.position[0] * transform.scale[0] + transform.position[0],
+                vertex.position[1] * transform.scale[1] + transform.position[1],
+            ];
+        }
+
         let mut bytes = any_as_u8_slice(&vertices);
 
         let mut buffer_descriptor = wgpu::util::BufferInitDescriptor {

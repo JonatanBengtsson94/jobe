@@ -7,7 +7,7 @@ use crate::ecs::Signature;
 pub struct Render;
 
 impl Render {
-    pub const SIGNATURE: Signature = 0b00000010;
+    pub const SIGNATURE: Signature = 0b00000011;
 
     pub fn render(
         context: &Context,
