@@ -1,14 +1,25 @@
 use crate::context::Context;
 
 use crate::ecs::component::Sprite;
-use crate::ecs::entity::Entity;
+use crate::ecs::entity::{Entity, MAX_ENTITIES};
+use crate::ecs::Signature;
 
-pub struct Render;
+pub struct Render {
+    signature: Signature,
+}
 
 impl Render {
+    pub const fn new() -> Self {
+        Render {
+            signature: 0b11000000,
+        }
+    }
+
     pub fn render(
+        &self,
         context: &Context,
         sprites: &Vec<Option<Sprite>>,
+        entity_signatures: &[Signature; MAX_ENTITIES],
     ) -> Result<(), wgpu::SurfaceError> {
         let current_frame = context.surface.get_current_texture()?;
         let image_view_descriptor = wgpu::TextureViewDescriptor::default();
@@ -46,15 +57,17 @@ impl Render {
         let mut renderpass = command_encoder.begin_render_pass(&render_pass_descriptor);
         renderpass.set_pipeline(&context.render_pipeline);
 
-        for sprite_option in sprites.iter() {
-            if let Some(sprite) = sprite_option {
-                renderpass.set_bind_group(0, &sprite.material.bind_group, &[]);
-                renderpass.set_vertex_buffer(0, sprite.quad.vertex_buffer.slice(..));
-                renderpass.set_index_buffer(
-                    sprite.quad.index_buffer.slice(..),
-                    wgpu::IndexFormat::Uint16,
-                );
-                renderpass.draw_indexed(0..6, 0, 0..1);
+        for (index, signature) in entity_signatures.iter().enumerate() {
+            if *signature == self.signature {
+                if let Some(sprite) = &sprites[index] {
+                    renderpass.set_bind_group(0, &sprite.material.bind_group, &[]);
+                    renderpass.set_vertex_buffer(0, sprite.quad.vertex_buffer.slice(..));
+                    renderpass.set_index_buffer(
+                        sprite.quad.index_buffer.slice(..),
+                        wgpu::IndexFormat::Uint16,
+                    );
+                    renderpass.draw_indexed(0..6, 0, 0..1);
+                }
             }
         }
 
