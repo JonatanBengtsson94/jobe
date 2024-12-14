@@ -1,7 +1,7 @@
 use winit::event::KeyEvent;
 
 use crate::context::Context;
-use crate::ecs::components::Sprite;
+use crate::ecs::components::{Sprite, Transform};
 use crate::ecs::Manager;
 use crate::renderer_backend::material::Material;
 use crate::renderer_backend::mesh::Quad;
@@ -14,7 +14,12 @@ pub struct Game<'a> {
 impl<'a> Game<'a> {
     pub fn new(context: Context<'a>) -> Self {
         let mut manager = Manager::new();
+
         let racket = manager.create_entity();
+        let racket_transform = Transform {
+            position: [0.0, 0.0],
+            scale: [0.5, 0.5],
+        };
         let racket_sprite = Sprite {
             material: Material::new(
                 "assets/racket.png",
@@ -22,9 +27,10 @@ impl<'a> Game<'a> {
                 &context.queue,
                 &context.material_bind_group_layout,
             ),
-            quad: Quad::new(&context.device),
+            quad: Quad::new(&context.device, &racket_transform),
         };
         manager.add_sprite(racket, racket_sprite);
+        manager.add_transform(racket, racket_transform);
 
         Game { context, manager }
     }
