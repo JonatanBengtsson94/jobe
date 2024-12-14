@@ -4,9 +4,8 @@ pub mod entity;
 pub mod manager;
 pub mod systems;
 
-pub use component::ComponentManager;
-pub use entity::Entity;
-pub use entity::EntityManager;
 pub use manager::Manager;
 
 pub type Signature = u8;
+pub type Entity = u16;
+pub const MAX_ENTITIES: usize = u16::MAX as usize;
