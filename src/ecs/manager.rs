@@ -1,6 +1,6 @@
 use winit::event::KeyEvent;
 
-use crate::context::Context;
+use crate::{context::Context, game::InputState};
 
 use super::{
     components::{
@@ -58,9 +58,9 @@ impl Manager {
         self.entity_signatures[entity as usize] |= VELOCITY;
     }
 
-    pub fn handle_input(&mut self, key_event: KeyEvent) {
+    pub fn handle_input(&mut self, key_event: KeyEvent, input_state: &mut InputState) {
         if let Some(player_velocity) = &mut self.velocity_components.components[0] {
-            Input::handle_key_event(key_event, player_velocity);
+            Input::handle_key_event(key_event, player_velocity, input_state);
         }
     }
 

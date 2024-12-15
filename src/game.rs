@@ -7,11 +7,18 @@ use crate::ecs::components::{Sprite, Transform, Velocity};
 use crate::ecs::Manager;
 use crate::renderer_backend::material::Material;
 
+#[derive(Default)]
+pub struct InputState {
+    pub up_pressed: bool,
+    pub down_pressed: bool,
+}
+
 pub struct Game<'a> {
     context: Context<'a>,
     manager: Manager,
     last_update: Instant,
     delta_time: Duration,
+    input_state: InputState,
 }
 
 impl<'a> Game<'a> {
@@ -43,11 +50,12 @@ impl<'a> Game<'a> {
             manager,
             last_update: Instant::now(),
             delta_time: Duration::default(),
+            input_state: InputState::default(),
         }
     }
 
     pub fn handle_input(&mut self, key_event: KeyEvent) {
-        self.manager.handle_input(key_event);
+        self.manager.handle_input(key_event, &mut self.input_state);
     }
 
     pub fn update(&mut self) {
