@@ -32,7 +32,7 @@ impl<'a> Game<'a> {
             ),
         };
         let racket_velocity = Velocity {
-            velocity: [0.1, 0.0],
+            velocity: [0.0, 0.0],
         };
         manager.add_sprite(racket, racket_sprite);
         manager.add_transform(racket, racket_transform);
@@ -46,7 +46,7 @@ impl<'a> Game<'a> {
         }
     }
 
-    pub fn handle_input(&self, key_event: KeyEvent) {
+    pub fn handle_input(&mut self, key_event: KeyEvent) {
         self.manager.handle_input(key_event);
     }
 

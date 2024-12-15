@@ -44,7 +44,7 @@ impl<'a> ApplicationHandler for App<'a> {
                 is_synthetic: false,
                 ..
             } => {
-                if let Some(game) = &self.game {
+                if let Some(game) = &mut self.game {
                     game.handle_input(event)
                 }
             }

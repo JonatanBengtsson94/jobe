@@ -58,8 +58,10 @@ impl Manager {
         self.entity_signatures[entity as usize] |= VELOCITY;
     }
 
-    pub fn handle_input(&self, key_event: KeyEvent) {
-        Input::handle_key_event(key_event);
+    pub fn handle_input(&mut self, key_event: KeyEvent) {
+        if let Some(player_velocity) = &mut self.velocity_components.components[0] {
+            Input::handle_key_event(key_event, player_velocity);
+        }
     }
 
     pub fn update(&mut self, delta_time: f32) {
