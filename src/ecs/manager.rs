@@ -81,7 +81,7 @@ impl Manager {
             &self.entity_signatures,
         );
 
-        Collision::detect_collisions(
+        Collision::update(
             &self.transform_components.components,
             &self.collider_components.components,
             &self.entity_signatures,

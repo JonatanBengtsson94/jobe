@@ -11,7 +11,7 @@ pub struct Collision;
 impl Collision {
     pub const SIGNATURE: Signature = TRANSFORM | COLLIDER;
 
-    pub fn detect_collisions(
+    pub fn update(
         transforms: &Vec<Option<Transform>>,
         colliders: &Vec<Option<Collider>>,
         entity_signatures: &[Signature; MAX_ENTITIES],
@@ -26,9 +26,8 @@ impl Collision {
                                 if let Some(transform_a) = &transforms[i] {
                                     if let Some(transform_b) = &transforms[j] {
                                         if Self::is_colliding(transform_a, transform_b) {
-                                            println!("Colliding");
                                             event_queue.push(Event::Collision(
-                                                CollisionEvent::PlayerOnEnemy,
+                                                CollisionEvent::PlayerOnEnemy(j as u16),
                                             ));
                                         }
                                     }

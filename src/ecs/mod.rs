@@ -32,7 +32,7 @@ pub enum Event {
 }
 
 pub enum CollisionEvent {
-    PlayerOnEnemy,
+    PlayerOnEnemy(Entity),
 }
 
 pub struct EventQueue {
