@@ -3,7 +3,7 @@ use crate::ecs::{
         signatures::{COLLIDER, TRANSFORM},
         Collider, Transform,
     },
-    Signature, MAX_ENTITIES,
+    CollisionEvent, Event, EventQueue, Signature, MAX_ENTITIES,
 };
 
 pub struct Collision;
@@ -15,6 +15,7 @@ impl Collision {
         transforms: &Vec<Option<Transform>>,
         colliders: &Vec<Option<Collider>>,
         entity_signatures: &[Signature; MAX_ENTITIES],
+        event_queue: &mut EventQueue,
     ) {
         for (i, signature) in entity_signatures.iter().enumerate() {
             if (*signature & Collision::SIGNATURE) == Collision::SIGNATURE {
@@ -26,6 +27,9 @@ impl Collision {
                                     if let Some(transform_b) = &transforms[j] {
                                         if Self::is_colliding(transform_a, transform_b) {
                                             println!("Colliding");
+                                            event_queue.push(Event::Collision(
+                                                CollisionEvent::PlayerOnEnemy,
+                                            ));
                                         }
                                     }
                                 }

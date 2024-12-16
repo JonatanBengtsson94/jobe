@@ -8,13 +8,14 @@ use super::{
         Collider, Sprite, Transform, Velocity,
     },
     systems::{Collision, Input, Movement, Render},
-    ComponentArray, Entity, Signature, MAX_ENTITIES,
+    ComponentArray, Entity, EventQueue, Signature, MAX_ENTITIES,
 };
 
 pub struct Manager {
     active_entities_count: u16,
     available_entities: u16,
     entity_signatures: [Signature; MAX_ENTITIES],
+    event_queue: EventQueue,
     transform_components: ComponentArray<Transform>,
     sprite_components: ComponentArray<Sprite>,
     velocity_components: ComponentArray<Velocity>,
@@ -27,6 +28,7 @@ impl Manager {
             active_entities_count: 0,
             available_entities: u16::MAX,
             entity_signatures: [Signature::default(); MAX_ENTITIES],
+            event_queue: EventQueue::new(),
             transform_components: ComponentArray::new(),
             sprite_components: ComponentArray::new(),
             velocity_components: ComponentArray::new(),
@@ -83,6 +85,7 @@ impl Manager {
             &self.transform_components.components,
             &self.collider_components.components,
             &self.entity_signatures,
+            &mut self.event_queue,
         );
     }
 

@@ -27,6 +27,32 @@ impl<T> ComponentArray<T> {
     }
 }
 
+pub enum Event {
+    Collision(CollisionEvent),
+}
+
+pub enum CollisionEvent {
+    PlayerOnEnemy,
+}
+
+pub struct EventQueue {
+    events: Vec<Event>,
+}
+
+impl EventQueue {
+    pub fn new() -> Self {
+        EventQueue { events: Vec::new() }
+    }
+
+    pub fn push(&mut self, event: Event) {
+        self.events.push(event);
+    }
+
+    pub fn drain(&mut self) -> Vec<Event> {
+        std::mem::take(&mut self.events)
+    }
+}
+
 pub mod layers {
     pub const PLAYER: u8 = 0b0000_0001;
     pub const ENEMY: u8 = 0b0000_0010;

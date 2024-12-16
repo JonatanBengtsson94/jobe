@@ -1,4 +1,5 @@
 pub mod collision;
+pub mod event;
 pub mod input;
 pub mod movement;
 pub mod render;
