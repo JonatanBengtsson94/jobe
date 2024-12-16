@@ -7,7 +7,7 @@ use super::{
         signatures::{COLLIDER, SPRITE, TRANSFORM, VELOCITY},
         Collider, Sprite, Transform, Velocity,
     },
-    systems::{Collision, Input, Movement, Render},
+    systems::{Collision, Input, Movement, Physics, Render},
     ComponentArray, Entity, EventQueue, Signature, MAX_ENTITIES,
 };
 
@@ -87,6 +87,12 @@ impl Manager {
             &self.entity_signatures,
             &mut self.event_queue,
         );
+
+        Physics::update(
+            &mut self.velocity_components.components,
+            &self.entity_signatures,
+            &mut self.event_queue,
+        )
     }
 
     pub fn render(&self, context: &Context) -> Result<(), wgpu::SurfaceError> {
