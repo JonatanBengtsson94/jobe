@@ -43,6 +43,26 @@ impl<'a> Game<'a> {
         manager.add_transform(racket, racket_transform);
         manager.add_velocity(racket, racket_velocity);
 
+        let ball = manager.create_entity();
+        let ball_transform = Transform {
+            position: [0.0, 0.0],
+            scale: [0.05, 0.05],
+        };
+        let ball_sprite = Sprite {
+            material: Material::new(
+                "assets/ball.png",
+                &context.device,
+                &context.queue,
+                &context.material_bind_group_layout,
+            ),
+        };
+        let ball_velocity = Velocity {
+            velocity: [-0.1, 0.0],
+        };
+        manager.add_sprite(ball, ball_sprite);
+        manager.add_transform(ball, ball_transform);
+        manager.add_velocity(ball, ball_velocity);
+
         Game {
             context,
             manager,
