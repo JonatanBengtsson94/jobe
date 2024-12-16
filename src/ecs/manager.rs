@@ -7,7 +7,7 @@ use super::{
         signatures::{COLLIDER, SPRITE, TRANSFORM, VELOCITY},
         Collider, Sprite, Transform, Velocity,
     },
-    systems::{Input, Movement, Render},
+    systems::{Collision, Input, Movement, Render},
     ComponentArray, Entity, Signature, MAX_ENTITIES,
 };
 
@@ -76,6 +76,12 @@ impl Manager {
             delta_time,
             &mut self.transform_components.components,
             &self.velocity_components.components,
+            &self.entity_signatures,
+        );
+
+        Collision::detect_collisions(
+            &self.transform_components.components,
+            &self.collider_components.components,
             &self.entity_signatures,
         );
     }
