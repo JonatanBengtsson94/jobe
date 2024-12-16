@@ -3,8 +3,8 @@ use std::time::{Duration, Instant};
 use winit::event::KeyEvent;
 
 use crate::context::Context;
-use crate::ecs::components::{Sprite, Transform, Velocity};
-use crate::ecs::Manager;
+use crate::ecs::components::{Collider, Sprite, Transform, Velocity};
+use crate::ecs::{layers, Manager};
 use crate::renderer_backend::material::Material;
 
 #[derive(Default)]
@@ -39,9 +39,14 @@ impl<'a> Game<'a> {
             ),
         };
         let racket_velocity = Velocity::default();
+        let racket_collider = Collider {
+            layer: layers::PLAYER,
+            collision_layers: layers::ENEMY,
+        };
         manager.add_sprite(racket, racket_sprite);
         manager.add_transform(racket, racket_transform);
         manager.add_velocity(racket, racket_velocity);
+        manager.add_collider(racket, racket_collider);
 
         let ball = manager.create_entity();
         let ball_transform = Transform {
@@ -59,9 +64,14 @@ impl<'a> Game<'a> {
         let ball_velocity = Velocity {
             velocity: [-0.1, 0.0],
         };
+        let ball_collider = Collider {
+            layer: layers::ENEMY,
+            collision_layers: layers::PLAYER,
+        };
         manager.add_sprite(ball, ball_sprite);
         manager.add_transform(ball, ball_transform);
         manager.add_velocity(ball, ball_velocity);
+        manager.add_collider(ball, ball_collider);
 
         Game {
             context,

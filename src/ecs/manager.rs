@@ -4,8 +4,8 @@ use crate::{context::Context, game::InputState};
 
 use super::{
     components::{
-        signatures::{SPRITE, TRANSFORM, VELOCITY},
-        Sprite, Transform, Velocity,
+        signatures::{COLLIDER, SPRITE, TRANSFORM, VELOCITY},
+        Collider, Sprite, Transform, Velocity,
     },
     systems::{Input, Movement, Render},
     ComponentArray, Entity, Signature, MAX_ENTITIES,
@@ -18,6 +18,7 @@ pub struct Manager {
     transform_components: ComponentArray<Transform>,
     sprite_components: ComponentArray<Sprite>,
     velocity_components: ComponentArray<Velocity>,
+    collider_components: ComponentArray<Collider>,
 }
 
 impl Manager {
@@ -29,6 +30,7 @@ impl Manager {
             transform_components: ComponentArray::new(),
             sprite_components: ComponentArray::new(),
             velocity_components: ComponentArray::new(),
+            collider_components: ComponentArray::new(),
         }
     }
 
@@ -56,6 +58,11 @@ impl Manager {
     pub fn add_velocity(&mut self, entity: Entity, velocity: Velocity) {
         self.velocity_components.insert(entity, velocity);
         self.entity_signatures[entity as usize] |= VELOCITY;
+    }
+
+    pub fn add_collider(&mut self, entity: Entity, collider: Collider) {
+        self.collider_components.insert(entity, collider);
+        self.entity_signatures[entity as usize] |= COLLIDER;
     }
 
     pub fn handle_input(&mut self, key_event: KeyEvent, input_state: &mut InputState) {
