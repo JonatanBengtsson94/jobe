@@ -74,6 +74,12 @@ impl Manager {
     }
 
     pub fn update(&mut self, delta_time: f32) {
+        Physics::update(
+            &mut self.velocity_components.components,
+            &self.entity_signatures,
+            &mut self.event_queue,
+        );
+
         Movement::update(
             delta_time,
             &mut self.transform_components.components,
@@ -87,12 +93,6 @@ impl Manager {
             &self.entity_signatures,
             &mut self.event_queue,
         );
-
-        Physics::update(
-            &mut self.velocity_components.components,
-            &self.entity_signatures,
-            &mut self.event_queue,
-        )
     }
 
     pub fn render(&self, context: &Context) -> Result<(), wgpu::SurfaceError> {
