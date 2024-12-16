@@ -38,9 +38,7 @@ impl<'a> Game<'a> {
                 &context.material_bind_group_layout,
             ),
         };
-        let racket_velocity = Velocity {
-            velocity: [0.0, 0.0],
-        };
+        let racket_velocity = Velocity::default();
         manager.add_sprite(racket, racket_sprite);
         manager.add_transform(racket, racket_transform);
         manager.add_velocity(racket, racket_velocity);
