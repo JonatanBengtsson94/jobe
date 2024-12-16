@@ -26,3 +26,8 @@ impl<T> ComponentArray<T> {
         self.components[entity as usize] = Some(component);
     }
 }
+
+pub mod layers {
+    pub const PLAYER: u8 = 0b0000_0001;
+    pub const ENEMY: u8 = 0b0000_0010;
+}
