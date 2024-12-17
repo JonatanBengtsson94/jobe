@@ -28,7 +28,7 @@ impl<'a> Game<'a> {
         let racket = manager.create_entity();
         let racket_transform = Transform {
             position: [-0.8, 0.0],
-            scale: [0.1, 0.1],
+            scale: [0.1, 0.2],
         };
         let racket_sprite = Sprite {
             material: Material::new(
